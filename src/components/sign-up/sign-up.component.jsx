@@ -4,7 +4,11 @@ import './sign-up.styles.scss'
 import FormInput from '../form-input/form-input.component'
 import Button from '../button/button.component'
 
-import { auth, createUserProfileDocument } from '../../firebase/firebase.utils'
+import {
+  auth,
+  createUserProfileDocument,
+  signInWithGoogle
+} from '../../firebase/firebase.utils'
 
 function SignUp() {
   const [state, setState] = useState({
@@ -94,7 +98,7 @@ function SignUp() {
         {state.formError && <p>{state.formError}</p>}
         <div className='button-group'>
           <Button type='submit'>SIGN UP</Button>
-          <Button type='submit' isGoogleSignIn>
+          <Button type='button' onClick={signInWithGoogle} isGoogleSignIn>
             SIGN UP WITH GOOGLE
           </Button>
         </div>

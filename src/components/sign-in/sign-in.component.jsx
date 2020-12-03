@@ -50,7 +50,7 @@ function SignIn() {
         />
         <div className='button-group'>
           <Button type='submit'>SIGN IN</Button>
-          <Button onClick={signInWithGoogle} isGoogleSignIn>
+          <Button onClick={signInWithGoogle} isGoogleSignIn type='button'>
             SIGN IN WITH GOOGLE
           </Button>
         </div>
