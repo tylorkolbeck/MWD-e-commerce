@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react'
 import './App.css'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 import ShopPage from './pages/shop/shop.component'
 import HomePage from './pages/homepage/homepage.component'
 import Header from './components/header/header.component'
 import SignInSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
 import { auth, createUserProfileDocument } from './firebase/firebase.utils'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { setCurrentUser } from './redux/user/user.actions'
 
 function App() {
+  const { currentUser } = useSelector((state) => state.user)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -40,7 +41,13 @@ function App() {
       <Switch>
         <Route exact path='/' component={HomePage} />
         <Route path='/shop' component={ShopPage} />
-        <Route path='/signin' component={SignInSignUp} />
+        <Route
+          exact
+          path='/signin'
+          render={() => {
+            return currentUser ? <Redirect to='/' /> : <SignInSignUp />
+          }}
+        />
       </Switch>
     </div>
   )
