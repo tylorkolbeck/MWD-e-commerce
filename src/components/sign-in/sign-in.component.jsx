@@ -4,6 +4,8 @@ import './sign-in.styles.scss'
 import FormInput from '../form-input/form-input.component'
 import Button from '../button/button.component'
 
+import { signInWithGoogle } from '../../firebase/firebase.utils'
+
 function SignIn() {
   const [state, setState] = useState({
     email: '',
@@ -11,7 +13,7 @@ function SignIn() {
   })
 
   function handleSubmit(event) {
-    event.preventDeafult()
+    event.preventDefault()
     setState({ ...state, email: '', password: '' })
   }
 
@@ -41,8 +43,12 @@ function SignIn() {
           required
           label='Password'
         />
-
-        <Button type='submit'>SIGN IN</Button>
+        <div className='button-group'>
+          <Button type='submit'>SIGN IN</Button>
+          <Button onClick={signInWithGoogle} isGoogleSignIn>
+            SIGN IN WITH GOOGLE
+          </Button>
+        </div>
       </form>
     </div>
   )

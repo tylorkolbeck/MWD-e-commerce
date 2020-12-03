@@ -1,11 +1,14 @@
 import React from 'react'
 import './button.styles.scss'
 
-function Button({ children, ...otherProps }) {
+function Button({ children, isGoogleSignIn, ...otherProps }) {
   return (
-    <div className='button' {...otherProps}>
+    <button
+      className={`${isGoogleSignIn ? 'google-sign-in' : ''} button`}
+      {...otherProps}
+    >
       {children}
-    </div>
+    </button>
   )
 }
 
