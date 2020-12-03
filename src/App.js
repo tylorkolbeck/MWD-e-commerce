@@ -35,10 +35,6 @@ function App() {
     return () => unsubscribeFromAuth()
   }, [])
 
-  useEffect(() => {
-    console.log(state.currentUser)
-  }, [state])
-
   return (
     <div>
       <Header currentUser={state.currentUser} />

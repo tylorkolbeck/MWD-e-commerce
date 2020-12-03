@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './directory.styles.scss'
 import MenuItem from '../menu-item/menu-item.component'
 
@@ -6,12 +6,9 @@ import MenuItem from '../menu-item/menu-item.component'
 import { sections } from '../../utils/dummyData'
 
 export default function Directory() {
-  const [state, setState] = useState({
-    sections: sections
-  })
   return (
     <div className='directory-menu'>
-      {state.sections.map(({ id, ...sectionProps }) => (
+      {sections.map(({ id, ...sectionProps }) => (
         <MenuItem key={id} {...sectionProps} />
       ))}
     </div>
