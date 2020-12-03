@@ -15,10 +15,6 @@ function SignUp() {
     formError: ''
   })
 
-  useEffect(() => {
-    console.log(state)
-  }, [state])
-
   async function handleSubmit(event) {
     event.preventDefault()
     const { displayName, email, password, confirmPassword } = state
