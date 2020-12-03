@@ -35,7 +35,7 @@ function Header() {
         )}
         <CartIcon />
       </div>
-      {cart.hidden && <CartDropDown />}
+      {cart.cartIsShown && <CartDropDown />}
     </div>
   )
 }
