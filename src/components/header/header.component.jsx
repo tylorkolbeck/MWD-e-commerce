@@ -5,9 +5,12 @@ import { ReactComponent as Logo } from '../../assets/crown.svg'
 import { Link } from 'react-router-dom'
 import { auth } from '../../firebase/firebase.utils'
 import { useSelector } from 'react-redux'
+import CartIcon from '../cart-icon/cart-icon.component'
+import CartDropDown from '../cart-dropdown/cart-dropdown.component'
 
 function Header() {
   const { currentUser } = useSelector((state) => state.user)
+  const cart = useSelector((state) => state.cart)
 
   return (
     <div className='header'>
@@ -30,7 +33,9 @@ function Header() {
             LOGIN
           </Link>
         )}
+        <CartIcon />
       </div>
+      {cart.hidden && <CartDropDown />}
     </div>
   )
 }
