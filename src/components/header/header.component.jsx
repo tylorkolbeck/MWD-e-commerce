@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { auth } from '../../firebase/firebase.utils'
 import { useSelector } from 'react-redux'
 import CartIcon from '../cart-icon/cart-icon.component'
-import CartDropDown from '../cart-dropdown/cart-dropdown.component'
+import CartDropdown from '../cart-dropdown/cart-dropdown.component'
 import { selectCartHidden } from '../../redux/cart/cart.selectors'
 import { selectCurrentUser } from '../../redux/user/user.selector'
 
@@ -37,7 +37,7 @@ function Header() {
         )}
         <CartIcon />
       </div>
-      {cartIsShown && <CartDropDown />}
+      {cartIsShown && <CartDropdown cartIsShown={cartIsShown} />}
     </div>
   )
 }
