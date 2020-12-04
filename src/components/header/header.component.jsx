@@ -7,10 +7,12 @@ import { auth } from '../../firebase/firebase.utils'
 import { useSelector } from 'react-redux'
 import CartIcon from '../cart-icon/cart-icon.component'
 import CartDropDown from '../cart-dropdown/cart-dropdown.component'
+import { selectCartHidden } from '../../redux/cart/cart.selectors'
+import { selectCurrentUser } from '../../redux/user/user.selector'
 
 function Header() {
-  const { currentUser } = useSelector((state) => state.user)
-  const cart = useSelector((state) => state.cart)
+  const currentUser = useSelector(selectCurrentUser)
+  const cartIsShown = useSelector(selectCartHidden)
 
   return (
     <div className='header'>
@@ -35,7 +37,7 @@ function Header() {
         )}
         <CartIcon />
       </div>
-      {cart.cartIsShown && <CartDropDown />}
+      {cartIsShown && <CartDropDown />}
     </div>
   )
 }
