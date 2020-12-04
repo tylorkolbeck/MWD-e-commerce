@@ -1,14 +1,14 @@
 import React from 'react'
 import StripeCheckOut from 'react-stripe-checkout'
 
-function StripeButton({ price }) {
+function StripeButton({ price, afterPayment }) {
   const priceForStripe = price * 100
   const publishKey =
     'pk_test_51HuUrfCIRgCo5psrhwfsB0c92hrZxJpuD5zV7xBKhr5OLgBedQQsgf6PPCFEZsfYt0R19i5IAYfqEkYkCF297WiA00l9f5K7fg'
 
   const onToken = (token) => {
     console.log(token)
-    alert('Payment Successful')
+    afterPayment()
   }
 
   return (

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   selectCartItems,
   selectCartTotal
@@ -8,11 +8,12 @@ import {
 import CheckoutItem from '../../components/checkout-item/checkout-item.component'
 import StripeButton from '../../components/stripe-button/stripe-button.component'
 import './checkout.styles.scss'
-import CartItem from '../../components/cart-item/cart-item.component'
+import { clearCart } from '../../redux/cart/cart.actions'
 
 function CheckoutPage() {
   const cartItems = useSelector(selectCartItems)
   const cartTotal = useSelector(selectCartTotal)
+  const dispatchClearCart = useDispatch()
 
   return (
     <div className='checkout-page'>
@@ -44,7 +45,10 @@ function CheckoutPage() {
         *Test card number* <br />
         4242 4242 4242 4242 - Exp: 01/25 - CVV: 123
       </div>
-      <StripeButton price={cartTotal} />
+      <StripeButton
+        price={cartTotal}
+        afterPayment={() => dispatchClearCart(clearCart())}
+      />
     </div>
   )
 }
