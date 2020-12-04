@@ -6,7 +6,6 @@ import { selectDirectorySection } from '../../redux/directory/directory.selector
 
 export default function Directory() {
   const directory = useSelector(selectDirectorySection)
-  console.log(directory)
 
   return (
     <div className='directory-menu'>
