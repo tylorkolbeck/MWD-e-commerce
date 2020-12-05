@@ -1,19 +1,30 @@
 import React from 'react'
-import './collection-preview.styles.scss'
-
 import CollectionItem from '../collection-item/collection-item.component'
+import { Link, useLocation } from 'react-router-dom'
+
+import {
+  CollectionPreviewContainer,
+  TitleContainer,
+  PreviewContainer
+} from './collection-preview.styles'
 
 export default function CollectionPreview({ title, items }) {
+  const { pathname } = useLocation()
+
   return (
-    <div className='collection-preview'>
-      <h1 className='title'>{title.toUpperCase()}</h1>
-      <div className='preview'>
+    <CollectionPreviewContainer>
+      <TitleContainer to={`${pathname}/${title.toLowerCase()}`}>
+        <h1>
+          {title.toUpperCase()} <span className='link'>- view all</span>
+        </h1>
+      </TitleContainer>
+      <PreviewContainer>
         {items
           .filter((item, i) => i < 4)
           .map((item) => (
             <CollectionItem key={item.id} item={item} />
           ))}
-      </div>
-    </div>
+      </PreviewContainer>
+    </CollectionPreviewContainer>
   )
 }

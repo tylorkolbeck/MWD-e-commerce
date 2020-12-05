@@ -2,12 +2,16 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router'
 import useClickOutside from '../../hooks/useClickOutside'
-import './cart-dropdown.styles.scss'
+import {
+  CartDropdownContainer,
+  CartItemsContainer,
+  EmptyMessageContainer,
+  CartDropdownButton
+} from './cart-dropdown.styles'
 
 import { selectCartItems } from '../../redux/cart/cart.selectors'
 import { toggleCartHidden } from '../../redux/cart/cart.actions'
 
-import Button from '../button/button.component'
 import CartItem from '../cart-item/cart-item.component'
 
 function CartDropdown({ cartIsShown }) {
@@ -19,23 +23,27 @@ function CartDropdown({ cartIsShown }) {
   )
 
   function handleGoToCart() {
-    dispatch(toggleCartHidden())
+    if (cartIsShown) {
+      dispatch(toggleCartHidden())
+    }
     history.push('/checkout')
   }
 
   return (
-    <div className='cart-dropdown' ref={ref}>
-      <div className='cart-items'>
+    <CartDropdownContainer ref={ref}>
+      <CartItemsContainer>
         {cartItems.length ? (
           cartItems.map((cartItem) => (
             <CartItem key={cartItem.id} item={cartItem} />
           ))
         ) : (
-          <span className='empty-message'>Cart Is Empty</span>
+          <EmptyMessageContainer>Cart Is Empty</EmptyMessageContainer>
         )}
-      </div>
-      <Button onClick={handleGoToCart}>GO TO CHECKOUT</Button>
-    </div>
+      </CartItemsContainer>
+      <CartDropdownButton onClick={handleGoToCart}>
+        GO TO CHECKOUT
+      </CartDropdownButton>
+    </CartDropdownContainer>
   )
 }
 

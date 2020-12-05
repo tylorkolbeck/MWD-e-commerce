@@ -7,8 +7,15 @@ import {
 } from '../../redux/cart/cart.selectors'
 import CheckoutItem from '../../components/checkout-item/checkout-item.component'
 import StripeButton from '../../components/stripe-button/stripe-button.component'
-import './checkout.styles.scss'
 import { clearCart } from '../../redux/cart/cart.actions'
+
+import {
+  CheckoutPageContainer,
+  CheckoutHeaderContainer,
+  HeaderBlockContainer,
+  TotalContainer,
+  WarningContainer
+} from './checkout.styles'
 
 function CheckoutPage() {
   const cartItems = useSelector(selectCartItems)
@@ -16,40 +23,40 @@ function CheckoutPage() {
   const dispatchClearCart = useDispatch()
 
   return (
-    <div className='checkout-page'>
-      <div className='checkout-header'>
-        <div className='header-block'>
+    <CheckoutPageContainer>
+      <CheckoutHeaderContainer>
+        <HeaderBlockContainer>
           <span>Product</span>
-        </div>
-        <div className='header-block'>
+        </HeaderBlockContainer>
+        <HeaderBlockContainer>
           <span>Description</span>
-        </div>
-        <div className='header-block'>
+        </HeaderBlockContainer>
+        <HeaderBlockContainer>
           <span>Quantity</span>
-        </div>
-        <div className='header-block'>
+        </HeaderBlockContainer>
+        <HeaderBlockContainer>
           <span>Price</span>
-        </div>
-        <div className='header-block'>
+        </HeaderBlockContainer>
+        <HeaderBlockContainer>
           <span>Remove</span>
-        </div>
-      </div>
+        </HeaderBlockContainer>
+      </CheckoutHeaderContainer>
       {cartItems.map((cartItem) => (
         <CheckoutItem key={cartItem.id} cartItem={cartItem} />
       ))}
 
-      <div className='total'>
+      <TotalContainer>
         <span>TOTAL: ${cartTotal}</span>
-      </div>
-      <div className='test-warning'>
+      </TotalContainer>
+      <WarningContainer>
         *Test card number* <br />
         4242 4242 4242 4242 - Exp: 01/25 - CVV: 123
-      </div>
+      </WarningContainer>
       <StripeButton
         price={cartTotal}
         afterPayment={() => dispatchClearCart(clearCart())}
       />
-    </div>
+    </CheckoutPageContainer>
   )
 }
 

@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
-import './sign-in.styles.scss'
 import FormInput from '../form-input/form-input.component'
 import Button from '../button/button.component'
-
 import { auth, signInWithGoogle } from '../../firebase/firebase.utils'
+
+import {
+  SignInContainer,
+  SignInTitle,
+  ButtonsBarContainer
+} from './sign-in.styles'
 
 function SignIn() {
   const [state, setState] = useState({
@@ -28,8 +32,8 @@ function SignIn() {
   }
 
   return (
-    <div className='sign-in'>
-      <h2 className='title'>Already have an account?</h2>
+    <SignInContainer>
+      <SignInTitle>Already have an account?</SignInTitle>
       <span>Sign in with your email and password</span>
       <form onSubmit={handleSubmit}>
         <FormInput
@@ -48,14 +52,14 @@ function SignIn() {
           required
           label='Password'
         />
-        <div className='button-group'>
+        <ButtonsBarContainer>
           <Button type='submit'>SIGN IN</Button>
           <Button onClick={signInWithGoogle} isGoogleSignIn type='button'>
             SIGN IN WITH GOOGLE
           </Button>
-        </div>
+        </ButtonsBarContainer>
       </form>
-    </div>
+    </SignInContainer>
   )
 }
 

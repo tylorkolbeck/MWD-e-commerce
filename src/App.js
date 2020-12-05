@@ -43,7 +43,7 @@ function App() {
       <Header />
       <Switch>
         <Route exact path='/' component={HomePage} />
-        <Route path='/shop' component={ShopPage} />
+        <Route path='/collections' component={ShopPage} />
         <Route path='/checkout' component={CheckoutPage} />
         <Route
           exact

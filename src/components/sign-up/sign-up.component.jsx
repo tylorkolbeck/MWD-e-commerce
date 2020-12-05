@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
-import './sign-up.styles.scss'
 
 import FormInput from '../form-input/form-input.component'
 import Button from '../button/button.component'
-
 import {
   auth,
   createUserProfileDocument,
   signInWithGoogle
 } from '../../firebase/firebase.utils'
+
+import {
+  SignUpContainer,
+  SignUpTitle,
+  ButtonsBarContainer
+} from './sign-up.styles'
 
 function SignUp() {
   const [state, setState] = useState({
@@ -58,8 +62,8 @@ function SignUp() {
   const { displayName, email, password, confirmPassword } = state
 
   return (
-    <div className='sign-up'>
-      <h2 className='title'>I do not have an account</h2>
+    <SignUpContainer>
+      <SignUpTitle>I do not have an account</SignUpTitle>
       <span>Sign up with your email and password</span>
 
       <form className='sign-up-form' onSubmit={handleSubmit}>
@@ -96,14 +100,14 @@ function SignUp() {
           required
         />
         {state.formError && <p>{state.formError}</p>}
-        <div className='button-group'>
+        <ButtonsBarContainer>
           <Button type='submit'>SIGN UP</Button>
           <Button type='button' onClick={signInWithGoogle} isGoogleSignIn>
             SIGN UP WITH GOOGLE
           </Button>
-        </div>
+        </ButtonsBarContainer>
       </form>
-    </div>
+    </SignUpContainer>
   )
 }
 
