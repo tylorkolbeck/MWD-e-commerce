@@ -1,6 +1,6 @@
 import React from 'react'
 import CollectionItem from '../collection-item/collection-item.component'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 import {
   CollectionPreviewContainer,

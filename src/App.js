@@ -12,10 +12,21 @@ import SignInSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.compon
 import { auth, createUserProfileDocument } from './firebase/firebase.utils'
 import { useSelector, useDispatch } from 'react-redux'
 import { setCurrentUser } from './redux/user/user.actions'
+import { selectCurrentUser } from './redux/user/user.selector'
 
 function App() {
-  const { currentUser } = useSelector((state) => state.user)
+  const currentUser = useSelector(selectCurrentUser)
   const dispatch = useDispatch()
+
+  // *** KEEP THIS FUNCTION FOR BULK INSERTING COLLECTIONS ***
+  // *** INTO THE DATABASE ***
+  // useEffect(() => {
+  //   addCollectionAndDocuments(
+  //     'collections',
+  //     collections.map(({ title, items }) => ({ title, items }))
+  //   )
+  // }, [])
+  // *** END BULK INSERT FUNCTION ***
 
   useEffect(() => {
     const unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {

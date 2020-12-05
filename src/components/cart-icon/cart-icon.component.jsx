@@ -10,7 +10,7 @@ import { selectCartItemsCount } from '../../redux/cart/cart.selectors'
 
 import { toggleCartHidden } from '../../redux/cart/cart.actions'
 
-function CartIcon({ cartIsShown }) {
+function CartIcon() {
   const dispatch = useDispatch()
 
   // Determine cart quantity in reducer state
