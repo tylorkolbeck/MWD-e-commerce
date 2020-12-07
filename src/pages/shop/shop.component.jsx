@@ -22,16 +22,34 @@ function Shop({ match }) {
   useEffect(() => {
     const collectionRef = firestore.collection('collections')
 
-    const unsubscribeFromSnapshot = collectionRef.onSnapshot(
-      async (snapshot) => {
-        const collectionsMap = convertCollectionsSnapshotToMap(snapshot)
-        dispatch(updateCollections(collectionsMap))
-        setIsLoading(false)
-      }
-    )
+    // ** Preferred way to fetch data from firebase
+    collectionRef.get().then((snapshot) => {
+      const collectionsMap = convertCollectionsSnapshotToMap(snapshot)
+      dispatch(updateCollections(collectionsMap))
+      setIsLoading(false)
+    })
+
+    // ** Observable style of fetching data from firebase(data stream) **
+    // ** Keep for reference **
+    // const unsubscribeFromSnapshot = collectionRef.onSnapshot(
+    //   async (snapshot) => {
+    //     const collectionsMap = convertCollectionsSnapshotToMap(snapshot)
+    //     dispatch(updateCollections(collectionsMap))
+    //     setIsLoading(false)
+    //   }
+    // )
+
+    // ** REST EXAMPLE OF FETCHING FROM FIREBASE DB **
+    // Not recommended due to the deep nesting of the return data
+    // fetch(
+    //   'https://firestore.googleapis.com/v1/projects/e-commerce-6eb74/databases/(default)/documents/collections'
+    // )
+    //   .then((response) => response.json())
+    //   .then((collections) => console.log(collections))
 
     return () => {
-      unsubscribeFromSnapshot()
+      // ** If using observable style of reading from firebase
+      // unsubscribeFromSnapshot()
     }
   }, [dispatch])
 
