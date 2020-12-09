@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+
+import { googleSignInStart, signUpStart } from '../../redux/user/user.actions'
 
 import FormInput from '../form-input/form-input.component'
 import Button from '../button/button.component'
-import {
-  auth,
-  createUserProfileDocument,
-  signInWithGoogle
-} from '../../firebase/firebase.utils'
 
 import {
   SignUpContainer,
@@ -16,15 +14,18 @@ import {
 
 function SignUp() {
   const [state, setState] = useState({
-    displayName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    displayName: 'testUser',
+    email: 'testemail',
+    password: '123456',
+    confirmPassword: '123456',
     formError: ''
   })
 
+  const dispatch = useDispatch()
+
   async function handleSubmit(event) {
     event.preventDefault()
+
     const { displayName, email, password, confirmPassword } = state
 
     if (password !== confirmPassword) {
@@ -32,23 +33,15 @@ function SignUp() {
       return
     }
 
-    try {
-      const { user } = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      )
+    dispatch(signUpStart({ displayName, email, password }))
 
-      await createUserProfileDocument(user, { displayName })
-      setState((prevState) => ({
-        ...prevState,
-        displayName: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      }))
-    } catch (error) {
-      console.log(error)
-    }
+    setState((prevState) => ({
+      ...prevState,
+      displayName: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
+    }))
   }
 
   function handleChange(event) {
@@ -102,7 +95,11 @@ function SignUp() {
         {state.formError && <p>{state.formError}</p>}
         <ButtonsBarContainer>
           <Button type='submit'>SIGN UP</Button>
-          <Button type='button' onClick={signInWithGoogle} isGoogleSignIn>
+          <Button
+            type='button'
+            onClick={() => dispatch(googleSignInStart())}
+            isGoogleSignIn
+          >
             SIGN UP WITH GOOGLE
           </Button>
         </ButtonsBarContainer>
