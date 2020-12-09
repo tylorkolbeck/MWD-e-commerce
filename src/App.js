@@ -9,14 +9,13 @@ import CheckoutPage from './pages/checkout/checkout.component'
 
 import Header from './components/header/header.component'
 import SignInSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
-import { auth, createUserProfileDocument } from './firebase/firebase.utils'
-import { useSelector, useDispatch } from 'react-redux'
-import { setCurrentUser } from './redux/user/user.actions'
+import { useSelector } from 'react-redux'
 import { selectCurrentUser } from './redux/user/user.selector'
+import { checkUserSession } from './redux/user/user.actions'
+import { useDispatch } from 'react-redux'
 
 function App() {
   const currentUser = useSelector(selectCurrentUser)
-  const dispatch = useDispatch()
 
   // *** KEEP THIS FUNCTION FOR BULK INSERTING COLLECTIONS ***
   // *** INTO THE DATABASE ***
@@ -27,26 +26,10 @@ function App() {
   //   )
   // }, [])
   // *** END BULK INSERT FUNCTION ***
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    const unsubscribeFromAuth = auth.onAuthStateChanged(async (userAuth) => {
-      if (userAuth) {
-        const userRef = await createUserProfileDocument(userAuth)
-        userRef.onSnapshot((snapShot) => {
-          dispatch(
-            setCurrentUser({
-              id: snapShot.id,
-              ...snapShot.data()
-            })
-          )
-        })
-      } else {
-        dispatch(setCurrentUser(null))
-      }
-    })
-
-    // Cleanup subscription on unmount
-    return () => unsubscribeFromAuth()
+    dispatch(checkUserSession())
   }, [dispatch])
 
   return (
