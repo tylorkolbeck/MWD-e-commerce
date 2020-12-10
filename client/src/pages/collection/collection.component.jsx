@@ -16,7 +16,7 @@ function CollectionPage({ match }) {
 
   return (
     <CollectionPageContainer>
-      <BreadCrumbs pathsArray={['Collections', title]} />
+      <BreadCrumbs pathsArray={['Shop', title]} />
 
       <CollectionTitle>{title}</CollectionTitle>
       <CollectionItemsContainer>
