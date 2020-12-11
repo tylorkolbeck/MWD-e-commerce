@@ -30,3 +30,8 @@ export const selectIsCollectionsLoaded = createSelector(
   [selectShop],
   (shop) => !!shop.collections
 )
+
+export const selectCollectionNames = createSelector(
+  [selectCollections],
+  (collections) => (collections ? Object.keys(collections) : [])
+)

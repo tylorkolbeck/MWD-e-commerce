@@ -62,6 +62,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
         displayName,
         email,
         createdAt,
+        role: 'user',
         ...additionalData
       })
     } catch (error) {

@@ -5,8 +5,9 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import ShopPage from './pages/shop/shop.component'
 import HomePage from './pages/homepage/homepage.component'
 import CheckoutPage from './pages/checkout/checkout.component'
+import AdminDashboard from './pages/admin/admin-dashboard.component'
+import ProtectedRoute from './components/protected-route/protected-route.component'
 
-import Header from './components/header/header.component'
 import SignInSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component'
 import { useSelector } from 'react-redux'
 import { selectCurrentUser } from './redux/user/user.selector'
@@ -36,7 +37,6 @@ function App() {
   return (
     <div>
       <GlobalStyle />
-      <Header />
       <Switch>
         <Route exact path='/' component={HomePage} />
         <Route path='/shop' component={ShopPage} />
@@ -47,6 +47,12 @@ function App() {
           render={() => {
             return currentUser ? <Redirect to='/' /> : <SignInSignUp />
           }}
+        />
+        <ProtectedRoute
+          exact
+          path='/admin'
+          component={AdminDashboard}
+          hasAccess={currentUser?.role === 'admin' ? true : false}
         />
       </Switch>
     </div>

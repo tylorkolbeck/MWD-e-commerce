@@ -26,8 +26,12 @@ export const TitleContainer = styled(Link)`
 `
 
 export const PreviewContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
+  /* display: flex;
+  justify-content: space-between; */
+  display: grid;
+  grid-gap: 15px;
+
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 
   @media screen and (max-width: 800px) {
     display: grid;
