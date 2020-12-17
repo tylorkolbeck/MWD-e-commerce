@@ -36,7 +36,7 @@ export default function AdminDashboard() {
             <b>Collections:</b>{' '}
           </span>
           {collectionNames.map((c) => (
-            <span key={c}> {c} </span>
+            <span key={`collection_name_${c}`}> {c} </span>
           ))}
           <br></br>
           <br></br>

@@ -77,7 +77,6 @@ export function* signUp({ payload: { email, password, displayName } }) {
 }
 
 export function* signInAfterSignUp({ payload: { user, additionalData } }) {
-  yield console.log(additionalData)
   yield getSnapShotFromUserAuth(user, additionalData)
 }
 

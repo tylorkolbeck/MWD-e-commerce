@@ -5,7 +5,13 @@ function FileInput({ label, onChange, ...rest }) {
   return (
     <InputContainer>
       <Label htmlFor='img'>{label}</Label>
-      <input type='file' name='img' accept='image/*' onChange={onChange} />
+      <input
+        type='file'
+        name='img'
+        accept='image/*'
+        onChange={onChange}
+        {...rest}
+      />
     </InputContainer>
   )
 }

@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
+import 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAzohRv5WFfgtKqd0c_Pi6tWfypkM9vuek',
@@ -13,6 +14,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig)
 export const firestore = firebase.firestore()
+
+export const storageRef = firebase.storage().ref()
 
 /**
  * Check if there is a current user session and then return it
@@ -104,7 +107,62 @@ export const addCollectionAndDocuments = async (
 }
 
 /**
- * Normalizes data from firebase database so
+ * If the collection does not already exist, create it
+ * else append it to the items array in the existing collection
+ * with a title of <collectionName>
+ *
+ * @param {string} collectionName
+ * @param {object} item
+ * @returns {promise} resolves to the item that was just added
+ */
+export const addItemToCollection = (collectionName, item) => {
+  const itemWithId = {
+    ...item,
+    id: firestore.collection('collections').doc().id
+  }
+
+  const collectionNameLowerCased = collectionName.toLowerCase()
+
+  return firestore
+    .collection('collections')
+    .where('title', '==', collectionNameLowerCased)
+    .get()
+    .then(async (snapShot) => {
+      // If the collection already exists append the item into the items array
+      const updateCollectionsPromises = []
+      if (snapShot.size > 0) {
+        updateCollectionsPromises.push(
+          snapShot.forEach((product) => {
+            firestore
+              .collection('collections')
+              .doc(product.id)
+              .update({
+                items: firebase.firestore.FieldValue.arrayUnion(itemWithId)
+              })
+          })
+        )
+
+        return Promise.all(updateCollectionsPromises).then(() => itemWithId)
+      } else {
+        // If the collection does not exists then create it here
+        return firestore
+          .collection('collections')
+          .add({
+            title: collectionNameLowerCased,
+            items: [itemWithId]
+          })
+          .then(() => {
+            return itemWithId
+          })
+          .catch((error) => error)
+        // return `Collection created for ${collectionName} and product was added.`
+      }
+    })
+    .catch((error) => error)
+}
+
+/**
+ * Normalizes data from firebase database
  * to a format that the front end can use
  * @param {array} collections
  * @returns {object}
@@ -125,4 +183,31 @@ export const convertCollectionsSnapshotToMap = (collections) => {
     accumulator[collectionItem.title.toLowerCase()] = collectionItem
     return accumulator
   }, {})
+}
+
+/**
+ *
+ * @param {File} imageFile
+ * @param {String} name
+ * @returns {promise} url | errorMessage
+ *
+ */
+export function firebaseImageUpload(imageFile) {
+  const uploadPromise = new Promise((resolve, reject) => {
+    if (!imageFile) {
+      resolve(null)
+    }
+
+    const imageName = new Date() + '-' + imageFile.name
+    const metaData = { contentType: imageFile.type }
+
+    storageRef
+      .child(imageName)
+      .put(imageFile, metaData)
+      .then((snapShot) => snapShot.ref.getDownloadURL())
+      .then((url) => resolve(url))
+      .catch((error) => reject(error.message))
+  })
+
+  return uploadPromise
 }
