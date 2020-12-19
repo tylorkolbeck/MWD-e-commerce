@@ -11,7 +11,6 @@ const shrinkLabelStyles = css`
 
 export const GroupContainer = styled.div`
   position: relative;
-  margin: 30px 0;
   input[type='password'] {
     letter-spacing: 0.3em;
   }
@@ -22,13 +21,14 @@ export const FormInputContainer = styled.input`
   background-color: white;
   color: ${subColor};
   font-size: 18px;
+  margin: 20px 0px;
   padding: 10px 10px 10px 5px;
   display: block;
   width: 100%;
   border: none;
   border-radius: 0;
+  font-family: inherit;
   border-bottom: 1px solid ${subColor};
-  margin: 25px 0;
   &:focus {
     outline: none;
   }
@@ -43,7 +43,7 @@ export const FormInputLabel = styled.label`
   font-weight: normal;
   position: absolute;
   pointer-events: none;
-  left: 5px;
+  left: 0px;
   top: 10px;
   transition: 300ms ease all;
   &.shrink {

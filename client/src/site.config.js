@@ -1,6 +1,6 @@
 export const siteData = {
   version: '1.0.0',
-  siteName: 'North Shore Kids',
+  siteName: 'CRWN Clothing',
   description: '',
   domain: 'https://mwd-e-commerce-demo.herokuapp.com/',
   hosted: 'heroku',

@@ -46,8 +46,34 @@ const getButtonStyles = (props) => {
   }
 }
 
+const getButtonMargin = (props) => {
+  if (props.mr) {
+    return css`
+      margin-right: 20px;
+    `
+  }
+
+  if (props.ml) {
+    return css`
+      margin-left: 20px;
+    `
+  }
+
+  if (props.mt) {
+    return css`
+      margin-top: 20px;
+    `
+  }
+
+  if (props.mb) {
+    return css`
+      margin-bottom: 20px;
+    `
+  }
+}
+
 export const ButtonContainer = styled.button`
-  min-width: 165px;
+  /* min-width: 165px; */
   width: auto;
   height: 50px;
   letter-spacing: 0.5px;
@@ -60,5 +86,6 @@ export const ButtonContainer = styled.button`
   cursor: pointer;
   display: flex;
   justify-content: center;
+  ${getButtonMargin}
   ${getButtonStyles}
 `

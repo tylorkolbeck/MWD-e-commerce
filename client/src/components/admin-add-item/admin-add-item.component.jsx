@@ -7,8 +7,8 @@ import FormInput from '../form-input/form-input.component'
 import SelectInput from '../select-input/select-input.component'
 import FileInput from '../file-input/file-input.component'
 import Button from '../button/button.component'
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
+import AdminImagePreview from '../admin-image-preview/admin-image-preview.component'
+import SectionHeader from '../section-header/section-header.component'
 
 import {
   firebaseImageUpload,
@@ -61,6 +61,29 @@ function AdminAddItem() {
     })
   }
 
+  function handleAddAdditionalImage() {
+    setItemImages({
+      ...itemImages,
+      additionalImages: [
+        ...itemImages.additionalImages,
+        {
+          id: generateUID(),
+          file: null,
+          url: (file) => firebaseImageUpload(file)
+        }
+      ]
+    })
+  }
+
+  function handleRemoveAssociatedImage(id) {
+    setItemImages({
+      ...itemImages,
+      additionalImages: itemImages.additionalImages.filter(
+        (image) => image.id !== id
+      )
+    })
+  }
+
   function handleRemoveColor(id) {
     setItemImages({
       ...itemImages,
@@ -70,8 +93,8 @@ function AdminAddItem() {
     })
   }
 
-  function updateColorAndAssociatedImageInState(imageId, field, value) {
-    const newImages = itemImages.colorsAndAssociatedImages.map((image) => {
+  function updateImageInCategory(imageCategory, imageId, field, value) {
+    const newImages = itemImages[imageCategory].map((image) => {
       if (image.id === imageId) {
         return {
           ...image,
@@ -81,7 +104,7 @@ function AdminAddItem() {
       return image
     })
 
-    setItemImages({ ...itemImages, colorsAndAssociatedImages: newImages })
+    setItemImages({ ...itemImages, [imageCategory]: newImages })
   }
 
   function addFeaturedImage(file) {
@@ -100,15 +123,11 @@ function AdminAddItem() {
   function handleFormInput(event) {
     const { value, name, selectedOptions, multiple } = event.target
 
-    if (value === 'newCollection') {
-      setFormState({ ...formState, collection: value, newCollection: value })
-      return
-    }
-
     if (selectedOptions && multiple) {
       let value = Array.from(selectedOptions, (option) => option.value)
       setFormState({ ...formState, [name]: value })
     } else {
+      console.log(value)
       if (Array.isArray(value)) {
         setFormState({ ...formState, [name]: value[0] })
       } else {
@@ -188,32 +207,20 @@ function AdminAddItem() {
   if (!formLoading)
     return (
       <FormContainer>
-        <h2 style={{ textAlign: 'center' }}>Create A New Item</h2>
+        <SectionHeader text='Product Details' />
         <form onSubmit={handleFormSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={12}>
-              <h3 style={{ marginRight: '20px' }}>Featured Image</h3>
+          <Grid container spacing={3}>
+            {/* Featured Image */}
+            <Grid item>
               <FileInput
-                onChange={(event) => addFeaturedImage(event.target.files[0])}
+                onChange={addFeaturedImage}
                 multiple={false}
                 required
+                preview
+                previewText='Select Featured Image'
               />
-
-              <Grid item xs={12}>
-                <div>
-                  {itemImages.featuredImage.file && (
-                    <img
-                      src={URL.createObjectURL(
-                        itemImages.featuredImage[0].file
-                      )}
-                      alt='featured'
-                    />
-                  )}
-                </div>
-              </Grid>
             </Grid>
-          </Grid>
-          <Grid container spacing={2}>
+
             <Grid item xs={12} sm={6}>
               <FormInput
                 label='Name'
@@ -222,8 +229,7 @@ function AdminAddItem() {
                 value={formState.name}
                 required
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+
               <FormInput
                 label='Description'
                 name='description'
@@ -231,10 +237,7 @@ function AdminAddItem() {
                 value={formState.description}
                 required
               />
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={3}>
+
               <FormInput
                 label='Price(USD)'
                 name='price'
@@ -242,110 +245,106 @@ function AdminAddItem() {
                 value={formState.price}
                 required
               />
-            </Grid>
-            <Grid item xs={3}>
-              <SelectInput
-                name='gender'
-                onChange={handleFormInput}
-                value={formState.gender}
-                required
-              >
-                <option value={null}>Gender</option>
-                <option value='boy'>Boy</option>
-                <option value='boy'>Girl</option>
-                <option value='neutral'>Neutral</option>
-              </SelectInput>
-            </Grid>
-            <Grid item xs={3}>
-              <SelectInput
-                name='collection'
-                onChange={handleFormInput}
-                value={formState.collection}
-                required
-              >
-                <option value={null} default>
-                  Add To Collection
-                </option>
-                <option value='newCollection'>New Collection</option>
-                {collectionNames.map((c) => (
-                  <option key={`collection_name_${c}`} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </SelectInput>
-            </Grid>
-            {/* If this is a new collection show input to name the collection */}
-            {formState.collection === 'newCollection' && (
-              <Grid item xs={3}>
-                <FormInput
-                  name='newCollection'
-                  value={formState.newCollection}
-                  onChange={handleFormInput}
-                  label='Collection Name'
-                  required
-                />
-              </Grid>
-            )}
-          </Grid>
-          <Grid container>
-            <Grid item xs={12}>
+
               <FormInput
                 label='Tags(comma seperated)'
                 name='tags'
                 onChange={handleFormInput}
                 value={formState.tags}
               />
-            </Grid>
-          </Grid>
 
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <SelectInput
-                name='sizes'
-                label='Sizes'
-                size={6}
-                multiple
-                onChange={handleFormInput}
-                value={formState.sizes}
-                required
-              >
-                {sizeData.map((c) => (
-                  <option key={`size_${c}`} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </SelectInput>
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <h2>
-                Colors{' '}
-                <SpanButton onClick={handleAddAnotherColor}>
-                  <AddCircleIcon />
-                </SpanButton>
-              </h2>
-              <Grid item container alignItems='center'>
-                {itemImages.colorsAndAssociatedImages.map((color) => (
-                  <Grid
-                    item
-                    container
-                    key={color.id}
-                    alignItems='center'
-                    spacing={3}
+              <Grid item container spacing={2}>
+                <Grid item xs={6}>
+                  <SelectInput
+                    name='sizes'
+                    label='Sizes'
+                    size={6}
+                    multiple
+                    onChange={handleFormInput}
+                    value={formState.sizes}
+                    required
                   >
-                    <Grid item xs={1}>
-                      <SpanButton onClick={() => handleRemoveColor(color.id)}>
-                        <DeleteForeverIcon />
-                      </SpanButton>
-                    </Grid>
-                    <Grid item xs={3}>
+                    {sizeData.map((c) => (
+                      <option key={`size_${c}`} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </SelectInput>
+                </Grid>
+
+                <Grid item xs={6}>
+                  <SelectInput
+                    label='Gender'
+                    name='gender'
+                    onChange={handleFormInput}
+                    value={formState.gender}
+                    required
+                  >
+                    <option value=''>Gender</option>
+                    <option value='boy'>Boy</option>
+                    <option value='girl'>Girl</option>
+                    <option value='neutral'>Neutral</option>
+                  </SelectInput>
+
+                  <SelectInput
+                    name='collection'
+                    label='Collection'
+                    onChange={handleFormInput}
+                    value={formState.collection}
+                    required
+                    disabled={formState.newCollection ? true : false}
+                  >
+                    <option value={null} default>
+                      Add To Collection
+                    </option>
+                    {collectionNames.map((c) => (
+                      <option key={`collection_name_${c}`} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </SelectInput>
+
+                  <FormInput
+                    name='newCollection'
+                    value={formState.newCollection}
+                    onChange={handleFormInput}
+                    label='New Collection'
+                    required
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            {/* COLORS AND ASSOCIATED COLORS */}
+            <Grid item container>
+              <SectionHeader text='Colors and Associated Images' />
+
+              <Grid item container spacing={2}>
+                {itemImages.colorsAndAssociatedImages.map((color) => (
+                  <Grid item container xs={12} md={3} key={color.id}>
+                    <Grid item>
+                      {/* <AdminImagePreview imageFile={color.file} /> */}
+                      <FileInput
+                        preview
+                        previewText='Select Color Image'
+                        name='colorImage'
+                        onDelete={() => handleRemoveColor(color.id)}
+                        onChange={(file) =>
+                          updateImageInCategory(
+                            'colorsAndAssociatedImages',
+                            color.id,
+                            'file',
+                            file
+                          )
+                        }
+                      />
                       <SelectInput
                         name='collectionName'
                         value={color.colorText}
                         required
                         onChange={(event) =>
-                          updateColorAndAssociatedImageInState(
+                          updateImageInCategory(
+                            'colorsAndAssociatedImages',
                             color.id,
                             'colorText',
                             event.target.value
@@ -364,45 +363,74 @@ function AdminAddItem() {
                         })}
                       </SelectInput>
                     </Grid>
-
-                    <Grid item xs={6}>
-                      <FileInput
-                        name='colorImage'
-                        label='Associated Image'
-                        onChange={(event) =>
-                          updateColorAndAssociatedImageInState(
-                            color.id,
-                            'file',
-                            event.target.files[0]
-                          )
-                        }
-                      />
-                    </Grid>
-                    <Grid item>
-                      <SpanButton onClick={handleAddAnotherColor}>
-                        Add Another
-                      </SpanButton>
-                    </Grid>
-                    <Grid item xs={12}>
-                      {color.file && (
-                        <img
-                          src={URL.createObjectURL(color.file)}
-                          style={{ height: '100px', width: 'auto' }}
-                          alt='Featured'
-                        />
-                      )}
-                    </Grid>
                   </Grid>
                 ))}
               </Grid>
-            </Grid>
-          </Grid>
 
-          <Grid container spacing={2} style={{ marginTop: '40px' }}>
-            <Grid item>
-              <Button type='submit'>Add Item To Shop</Button>
+              <Grid item>
+                <Button onClick={handleAddAnotherColor} inverted type='button'>
+                  Add Color
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item>
+
+            {/* PRODUCT IMAGES */}
+            <Grid item container>
+              <SectionHeader text='Product Images' />
+
+              <Grid item container spacing={2}>
+                {itemImages.additionalImages.map((image) => {
+                  return (
+                    <Grid
+                      item
+                      style={{ display: 'flex', alignItems: 'center' }}
+                      xs={12}
+                      md={3}
+                      key={image.id}
+                    >
+                      <Grid item container direction='column'>
+                        {/* <Grid item>
+                          <AdminImagePreview imageFile={image.file} />
+                        </Grid> */}
+                        <Grid item>
+                          <FileInput
+                            preview
+                            name='colorImage'
+                            onDelete={() =>
+                              handleRemoveAssociatedImage(image.id)
+                            }
+                            onChange={(file) =>
+                              updateImageInCategory(
+                                'additionalImages',
+                                image.id,
+                                'file',
+                                file
+                              )
+                            }
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  )
+                })}
+
+                <Grid item xs={12}>
+                  <Button
+                    onClick={handleAddAdditionalImage}
+                    inverted
+                    type='button'
+                  >
+                    Add Image
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+
+            {/* SUBMIT BUTTONS */}
+            <Grid item container>
+              <Button type='submit' mr>
+                Add Item To Shop
+              </Button>
               <Button type='button' inverted>
                 Save Item As Draft
               </Button>
